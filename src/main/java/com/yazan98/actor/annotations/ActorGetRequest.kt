@@ -7,7 +7,7 @@ import java.lang.annotation.Target
 
 
 @Inherited
-@Documented
+@MustBeDocumented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 annotation class ActorGetRequest(
