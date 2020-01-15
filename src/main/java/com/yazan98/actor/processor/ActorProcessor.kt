@@ -96,8 +96,10 @@ class ActorProcessor : AbstractProcessor() {
                     controller.description
             ))
         }
+        controllers.forEach {
+            println("The Controller : $it")
+        }
     }
-
 
     override fun getSupportedSourceVersion(): SourceVersion {
         return SourceVersion.RELEASE_10

@@ -6,7 +6,7 @@ import java.lang.annotation.Inherited
 
 @Inherited
 @MustBeDocumented
-@kotlin.annotation.Target
+@Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ActorApplication(
         val name: String,
