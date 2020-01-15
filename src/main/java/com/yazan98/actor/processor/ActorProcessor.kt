@@ -1,16 +1,15 @@
 package com.yazan98.actor.processor
 
+import com.google.auto.service.AutoService
 import com.yazan98.actor.ActorConsts
 import com.yazan98.actor.annotations.ActorApplication
 import com.yazan98.actor.annotations.ActorController
 import com.yazan98.actor.annotations.ActorGetRequest
 import com.yazan98.actor.models.ActorApplicationInfo
 import com.yazan98.actor.models.ActorRequestInfo
+import org.springframework.context.annotation.Configuration
 import java.util.*
-import javax.annotation.processing.AbstractProcessor
-import javax.annotation.processing.Messager
-import javax.annotation.processing.ProcessingEnvironment
-import javax.annotation.processing.RoundEnvironment
+import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -19,7 +18,14 @@ import javax.lang.model.util.ElementFilter
 import javax.tools.Diagnostic
 import kotlin.collections.ArrayList
 
-class ActorProcessor : AbstractProcessor() {
+@SupportedAnnotationTypes(value = [
+    "com.yazan98.actor.annotations.ActorApplication",
+    "com.yazan98.actor.annotations.ActorController",
+    "com.yazan98.actor.annotations.ActorGetRequest"
+])
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@AutoService(ActorProcessor::class)
+open class ActorProcessor : AbstractProcessor() {
 
     private lateinit var messager: Messager
     private val applicationDetails: ActorApplicationInfo by lazy {
@@ -28,6 +34,10 @@ class ActorProcessor : AbstractProcessor() {
 
     private val controllers: ArrayList<ActorRequestInfo> by lazy {
         ArrayList<ActorRequestInfo>()
+    }
+
+    init {
+        println("Processor Called")
     }
 
     override fun init(processingEnv: ProcessingEnvironment?) {
