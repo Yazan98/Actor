@@ -18,4 +18,8 @@ public @interface Actor {
 
     String description() default ActorConsts.DEFAULT_DESCRIPTION;
 
+    String serverHost();
+
+    String serverPort();
+
 }

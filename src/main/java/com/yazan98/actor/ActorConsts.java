@@ -5,4 +5,5 @@ public class ActorConsts {
     public static final String DEFAULT_DESCRIPTION = "Actor Generator For Postman Collections";
     public static final String DEFAULT_NAME = "Actor Result";
     public static final String DEFAULT_SCHEMA = "https://schema.getpostman.com/json/collection/v2.1.0/collection.json";
+    public static final String DEFAULT_CONTROLLER_DESCRIPTION = "Actor Controller Description";
 }

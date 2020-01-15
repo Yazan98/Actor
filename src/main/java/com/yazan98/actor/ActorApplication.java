@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@Actor(enabled = true , application = ActorApplication.class, description = "HEHEHEHE")
 public class ActorApplication {
 
     public static void main(String[] args) {

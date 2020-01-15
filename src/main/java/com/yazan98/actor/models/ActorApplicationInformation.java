@@ -2,18 +2,18 @@ package com.yazan98.actor.models;
 
 import java.io.Serializable;
 
-public class ApplicationInfo implements Serializable {
+public class ActorApplicationInformation implements Serializable {
 
     private String id;
     private String applicationName;
     private String description;
     private String schema;
 
-    public ApplicationInfo() {
+    public ActorApplicationInformation() {
 
     }
 
-    public ApplicationInfo(String id, String applicationName, String description, String schema) {
+    public ActorApplicationInformation(String id, String applicationName, String description, String schema) {
         this.id = id;
         this.applicationName = applicationName;
         this.description = description;

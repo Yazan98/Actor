@@ -2,7 +2,9 @@ package com.yazan98.actor.processor;
 
 import com.yazan98.actor.ActorConsts;
 import com.yazan98.actor.annotations.Actor;
-import com.yazan98.actor.models.ApplicationInfo;
+import com.yazan98.actor.annotations.ActorController;
+import com.yazan98.actor.models.ActorApplicationInformation;
+import com.yazan98.actor.models.ActorControllerInformation;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
@@ -18,14 +20,18 @@ import java.util.*;
 
 public class ActorProcessor extends AbstractProcessor {
 
-    private ApplicationInfo applicationInfo;
+    private String defaultHost;
+    private String defaultPort;
+    private ArrayList<ActorControllerInformation> controllerInformations;
+    private ActorApplicationInformation applicationInfo;
     private Set<String> supportedAnnotationTypes;
     private Messager messager;
 
     public ActorProcessor() {
         this.supportedAnnotationTypes = new HashSet<>();
-        this.applicationInfo = new ApplicationInfo();
+        this.applicationInfo = new ActorApplicationInformation();
         this.supportedAnnotationTypes.add("com.yazan98.actor.annotations.Actor");
+        this.controllerInformations = new ArrayList<>();
     }
 
     @Override
@@ -53,19 +59,25 @@ public class ActorProcessor extends AbstractProcessor {
         for (TypeElement type : types) {
             Actor applicationAnnotation = type.getAnnotation(Actor.class);
             if (applicationAnnotation.enabled()) {
-                applicationInfo.setApplicationName(applicationAnnotation.application().getSimpleName() + ActorConsts.DEFAULT_NAME);
-                applicationInfo.setDescription(applicationAnnotation.description());
-                applicationInfo.setSchema(ActorConsts.DEFAULT_SCHEMA);
-                applicationInfo.setId(UUID.randomUUID().toString());
-                startValidateControllers(environment);
+                this.applicationInfo.setApplicationName(applicationAnnotation.application().getSimpleName() + ActorConsts.DEFAULT_NAME);
+                this.applicationInfo.setDescription(applicationAnnotation.description());
+                this.applicationInfo.setSchema(ActorConsts.DEFAULT_SCHEMA);
+                this.applicationInfo.setId(UUID.randomUUID().toString());
+                this.defaultHost = applicationAnnotation.serverHost();
+                this.defaultPort = applicationAnnotation.serverPort();
+                startExecuteControllerValidation(environment);
             } else {
                 break;
             }
         }
     }
 
-    private void startValidateControllers(RoundEnvironment environment) {
-
+    private void startExecuteControllerValidation(RoundEnvironment environment) {
+        Collection<? extends Element> annotatedElements = environment.getElementsAnnotatedWith(ActorController.class);
+        List<TypeElement> types = ElementFilter.typesIn(annotatedElements);
+        for (TypeElement element : types) {
+            controllerInformations.add(new ActorControllerInformation());
+        }
     }
 
     @Override
