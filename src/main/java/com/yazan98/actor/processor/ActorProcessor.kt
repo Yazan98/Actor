@@ -112,7 +112,7 @@ open class ActorProcessor : AbstractProcessor() {
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.RELEASE_10
+        return SourceVersion.RELEASE_8
     }
 
 }
