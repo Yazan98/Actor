@@ -4,6 +4,6 @@ import com.yazan98.actor.models.ActorController
 
 interface ActorMapper {
 
-    fun getControllers(): List<ActorController<Any>>
+    fun getControllers(): List<ActorController>
 
 }

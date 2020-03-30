@@ -1,4 +1,4 @@
-package com.yazan98.actor.printers
+package com.yazan98.actor
 
 import com.yazan98.actor.models.ActorApplicationInfo
 

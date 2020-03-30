@@ -1,7 +1,7 @@
 package com.yazan98.actor.models
 
-data class ActorController<T>(
+data class ActorController(
         var name: String = "Actor Controller",
         var description: String = "Actor Controller Description",
-        var item: List<ActorRequest<T>>
+        var item: List<ActorRequest>
 )
