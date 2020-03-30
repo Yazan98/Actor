@@ -126,12 +126,12 @@ def artifactID = "springboot-postman"
 def rootDes = "Generate Postman Collection"
 def repoName = "Actor"
 
-version = "1.0.3"
+version = "0.0.1"
 group = "com.yazan98.actor"
 
 ext {
     LibraryGroup = "com.yazan98.actor"
-    LibraryVersion = "0.0.0"
+    LibraryVersion = "0.0.1"
 
     PackagingType = "arr"
     LibraryName = "Actor"
@@ -241,8 +241,8 @@ publishing {
             pom {
                 description = "Postman Collection Generator"
                 url = "https://github.com/Yazan98/Actor"
-                groupId = "io.vortex"
-                artifactId "${artifactID}"
+                groupId = "com.yazan98.actor"
+                artifactId "springboot-postman"
                 version rootProject.ext.LibraryVersion
                 licenses {
                     license {
