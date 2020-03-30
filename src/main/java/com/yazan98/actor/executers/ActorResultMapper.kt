@@ -91,6 +91,7 @@ class ActorResultMapper {
         }
 
         result.put("url", url)
+        result.put("body", ActorBodyMapper().getRequestBody(request.body))
 
         return result
     }
