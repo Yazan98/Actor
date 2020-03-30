@@ -1,3 +1,26 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+buildscript {
+    ext.kotlin_version = '1.3.50'
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url "https://maven.google.com" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:1.4.1"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+        classpath "io.freefair.gradle:github-plugin:4.1.1"
+    }
+}
+
+
 plugins {
     id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
@@ -7,6 +30,10 @@ plugins {
     id 'idea'
 }
 
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: "kotlin"
 apply plugin: 'kotlin-kapt'
 
@@ -22,8 +49,13 @@ configurations {
 }
 
 repositories {
+    jcenter()
     mavenCentral()
+    maven { url "https://maven.google.com" }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url "https://plugins.gradle.org/m2/" }
 }
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -60,4 +92,182 @@ task fatJar(type: Jar) {
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+bootJar {
+    mainClassName = 'com.yazan98.actor.test.ActorApplication'
+}
+
+bootJar {
+    requiresUnpack '**/jruby-complete-*.jar'
+    manifest {
+        attributes 'Start-Class': 'com.yazan98.actor.test.ActorApplication'
+    }
+}
+
+bootRun {
+    optimizedLaunch = false
+    sourceResources sourceSets.main
+}
+
+jar {
+    enabled = true
+}
+
+
+def artifactID = "springboot-postman"
+def rootDes = "Generate Postman Collection"
+def repoName = "Actor"
+
+version = "1.0.3"
+group = "com.yazan98.actor"
+
+ext {
+    LibraryGroup = "com.yazan98.actor"
+    LibraryVersion = "0.0.0"
+
+    PackagingType = "arr"
+    LibraryName = "Actor"
+    GithubUrl = "https://github.com/Yazan98/Actor"
+    GitUrl = "https://github.com/Yazan98/Actor.git"
+    licenseName = "Apache-2.0"
+    licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0"
+    distribution = 'repo'
+    GithubIssuesUrl = "https://github.com/Yazan98/Actor/issues"
+    DeveloperID = "yt98"
+    DeveloperName = "Yazan Tarifi"
+    DeveloperEmail = ""
+    Description = "Spring Boot Postman Collection Generator"
+
+
+    BintrayUsername = "yt98"
+    BintrayApiKey = ""
+}
+
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging rootProject.ext.PackagingType
+            name rootProject.ext.LibraryName
+            description "${rootDes}"
+            url rootProject.ext.GithubUrl
+
+            artifactId "springboot-postman"
+            groupId rootProject.ext.LibraryGroup
+            version rootProject.ext.LibraryVersion
+
+            licenses {
+
+                license {
+                    name rootProject.ext.licenseName
+                    url rootProject.ext.licenseUrl
+                    distribution rootProject.ext.distribution
+                }
+            }
+
+            scm {
+                connection rootProject.ext.GitUrl
+                url rootProject.ext.GithubUrl
+            }
+
+            developers {
+
+                developer {
+                    id rootProject.ext.DeveloperID
+                    name rootProject.ext.DeveloperName
+                    email rootProject.ext.DeveloperEmail
+                }
+
+            }
+
+        }
+    }
+}
+
+
+bintray {
+
+    user = "${rootProject.ext.BintrayUsername}"
+    key = "${rootProject.ext.BintrayApiKey}"
+
+    configurations = ['archives']
+    publications = ['mavenJava']
+
+    publish = true
+
+    pkg {
+        repo = rootProject.ext.LibraryName
+        name = "${repoName}"
+        desc = "${rootDes}"
+
+        dryRun = false
+        publish = true
+        override = true
+
+        userOrg = user
+        licenses = ["${rootProject.ext.licenseName}"]
+        vcsUrl = rootProject.ext.GitUrl
+        issueTrackerUrl = rootProject.ext.GithubIssuesUrl
+
+        publicDownloadNumbers = true
+
+    }
+}
+
+tasks.register("sourcesJar", Jar) {
+    from sourceSets.main.allJava
+    classifier "sources"
+}
+
+tasks.register("javadocJar", Jar) {
+    from javadoc
+    classifier "javadoc"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                description = "Postman Collection Generator"
+                url = "https://github.com/Yazan98/Actor"
+                groupId = "io.vortex"
+                artifactId "${artifactID}"
+                version rootProject.ext.LibraryVersion
+                licenses {
+                    license {
+                        name = "Apache-2.0"
+                        url  = rootProject.ext.licenseUrl
+                        distribution = rootProject.ext.distribution
+                    }
+                }
+                developers {
+                    developer {
+                        id = "Yazan98"
+                        name = "Yazan"
+                        email = "yazantarifi1@hotmail.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://github.com/Yazan98/Actor.git"
+                    developerConnection = "scm:git:https://github.com/Yazan98/Actor.git"
+                    url = "https://github.com/Yazan98/Actor"
+                }
+            }
+        }
+    }
+}
+
+artifacts {
+    archives javadocJar
 }
